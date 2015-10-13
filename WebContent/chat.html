@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+
+<title>Chat</title>
+<script src="build/react.js"></script>
+<script type="text/javascript">
+	var websocket = new WebSocket(
+			"ws://localhost:8080/SimpleChatApp/chatServerEndpoint")
+	websocket.onmessage = function processMessage(message) {
+		var jsonData = JSON.parse(message.data)
+		if (jsonData.message != null)
+			messagesTA.value += jsonData.message + "\n";
+	}
+	function sendMessage() {
+		websocket.send(messageText.value);
+		messageText.value = "";
+
+	}
+	function connect() {
+		document.getElementById('toggleVisible').style.display = 'inline';
+		document.getElementById('toggleVisibleTA').style.display = 'inline';
+	}
+	function changeUsername() {
+		websocket.send("newusername"+ "<>" + usernameText.value);
+	}
+</script>
+</head>
+<body class="is-loading">
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Main -->
+		<section id="main">
+			<header>
+				<span class="avatar"><img src="images/avatar.jpg" alt="" /></span>
+				<div id="example"></div>
+				<script src="build/helloworld.js"></script>
+
+			</header>
+			<ul class="actions">
+				<li><input type="button" value="Connect" onClick="connect()" /></li>
+				<li></li>
+
+			</ul >
+			<ul id="toggleVisible" class="actions">
+			<li> <input type="text" id="usernameText" placeholder="username..." /> </li>
+			<li><input type="button" class="button" value="Change Username"
+					onClick="changeUsername()" /> </li>
+			</ul>
+			<hr />
+			<div id ="toggleVisibleTA">
+			<div class="field">
+				<textarea id="messagesTA" readonly="readonly" rows="10" cols="45"> </textarea>
+			</div>
+			<div class="field">
+				<input type="text" id="messageText" placeholder="Write..." />
+			</div>
+			<ul class="actions">
+				<li><input type="button" class="button" value="Send"
+					onClick="sendMessage()" /></li>
+			</ul>
+			</div>
+			<hr />
+		</section>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<ul class="copyright">
+				<li>&copy; ChatRoom</li>
+			</ul>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
+	<script>
+		if ('addEventListener' in window) {
+			window.addEventListener('load', function() {
+				document.body.className = document.body.className.replace(
+						/\bis-loading\b/, '');
+			});
+			document.body.className += (navigator.userAgent
+					.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+		}
+	</script>
+
+</body>
+
+
+
+<br />
+</body>
+</html>
